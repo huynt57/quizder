@@ -11,8 +11,9 @@
  *
  * @property integer $id
  * @property integer $quiz_id
- * @property string $correct_answer
+ * @property integer $correct_answer
  * @property string $answer_image
+ * @property string $answer_text
  *
  */
 abstract class BaseQuizAnswer extends GxActiveRecord {
@@ -30,15 +31,15 @@ abstract class BaseQuizAnswer extends GxActiveRecord {
 	}
 
 	public static function representingColumn() {
-		return 'correct_answer';
+		return 'answer_image';
 	}
 
 	public function rules() {
 		return array(
-			array('quiz_id', 'numerical', 'integerOnly'=>true),
-			array('correct_answer, answer_image', 'safe'),
-			array('quiz_id, correct_answer, answer_image', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('id, quiz_id, correct_answer, answer_image', 'safe', 'on'=>'search'),
+			array('quiz_id, correct_answer', 'numerical', 'integerOnly'=>true),
+			array('answer_image, answer_text', 'safe'),
+			array('quiz_id, correct_answer, answer_image, answer_text', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('id, quiz_id, correct_answer, answer_image, answer_text', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +59,7 @@ abstract class BaseQuizAnswer extends GxActiveRecord {
 			'quiz_id' => Yii::t('app', 'Quiz'),
 			'correct_answer' => Yii::t('app', 'Correct Answer'),
 			'answer_image' => Yii::t('app', 'Answer Image'),
+			'answer_text' => Yii::t('app', 'Answer Text'),
 		);
 	}
 
@@ -66,8 +68,9 @@ abstract class BaseQuizAnswer extends GxActiveRecord {
 
 		$criteria->compare('id', $this->id);
 		$criteria->compare('quiz_id', $this->quiz_id);
-		$criteria->compare('correct_answer', $this->correct_answer, true);
+		$criteria->compare('correct_answer', $this->correct_answer);
 		$criteria->compare('answer_image', $this->answer_image, true);
+		$criteria->compare('answer_text', $this->answer_text, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
