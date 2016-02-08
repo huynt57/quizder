@@ -3,10 +3,15 @@
 class QuizAnswerGivenController extends Controller {
 
     public function actionAddGivenAnswers() {
-        $json = $_POST['given_answers'];
-        $given_answers = json_decode($json, true);
-        $data = QuizAnswersGiven::model()->addGivenAnswers($given_answers);
-        ResponseHelper::JsonReturnSuccess($data);
+        try {
+            $json = $_POST['given_answers'];
+            $given_answers = json_decode($json, true);
+            // var_dump($given_answers); die;
+            $data = QuizAnswersGiven::model()->addGivenAnswers($given_answers);
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
     }
 
     // Uncomment the following methods and override them if needed
