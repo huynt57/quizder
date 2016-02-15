@@ -33,6 +33,19 @@ class GameController extends Controller {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
+    
+    public function actionGetTotalPlayerPoints()
+    {
+        $request = Yii::app()->request;
+        try {
+            $player_id = StringHelper::filterString($request->getQuery('player_id'));
+            $data = Game::model()->getTotalPlayerPoints($player_id);
+           
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
 
     // Uncomment the following methods and override them if needed
     /*

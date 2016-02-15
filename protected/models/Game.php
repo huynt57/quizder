@@ -26,4 +26,13 @@ class Game extends BaseGame {
         return FALSE;
     }
 
+    public function getTotalPlayerPoints($player_id) {
+        $data = Yii::app()->db->createCommand()
+                ->select('sum(player_points) as player_points')
+                ->from('tbl_game g')
+                ->where("g.player_id = '" . $player_id . "'")
+                ->queryRow();
+        return $data;
+    }
+
 }

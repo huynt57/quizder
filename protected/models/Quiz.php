@@ -20,13 +20,13 @@ class Quiz extends BaseQuiz {
         return $returnValue;
     }
 
-    public function getMostPlayedQuizziesRecently($hour, $limit) {
+    public function getMostPlayedQuizzesRecently($hour, $limit) {
         $range = strtotime("- $hour hours");
         $range_time = date("Y-m-d H:i:s", $range);
         $data = Yii::app()->db->createCommand()
                 ->select('t.*, COUNT(g.quiz_id) as play_count')
                 ->from('tbl_quiz t')
-                ->join('tbl_game g', 't.id = g.quiz_id')
+                ->leftJoin('tbl_game g', 't.id = g.quiz_id')
                 ->limit($limit)
                 ->group('g.quiz_id')
                 ->order('play_count DESC')
@@ -35,7 +35,7 @@ class Quiz extends BaseQuiz {
         return $data;
     }
 
-    public function getNewestQuizziesInCategory($category) {
+    public function getNewestQuizzesInCategory($category) {
         $criteria = new CDbCriteria;
         $criteria->condition = "category = '" . $category . "'";
         $criteria->order = 'created_at DESC';
@@ -43,23 +43,23 @@ class Quiz extends BaseQuiz {
         return $data;
     }
 
-    public function getMostPlayedQuizziesInCategory($category) {
+    public function getMostPlayedQuizzesInCategory($category) {
         $data = Yii::app()->db->createCommand()
                 ->select('t.*, count(g.id) AS gameCount')
                 ->from('tbl_quiz t')
-                ->join('tbl_game g', 't.id = g.quiz_id')
-                ->group('g.quiz_id')
+                ->leftJoin('tbl_game g', 't.id = g.quiz_id')
+                ->group('t.id')
                 ->order('gameCount DESC')
                 ->where("category = '" . $category . "'")
                 ->queryAll();
         return $data;
     }
 
-    public function getBestRatedQuizziesInCategory($category) {
+    public function getBestRatedQuizzesInCategory($category) {
         $data = Yii::app()->db->createCommand()
                 ->select('t.*, avg(g.rating) AS averageRating')
                 ->from('tbl_quiz t')
-                ->join('tbl_game g', 't.id = g.quiz_id')
+                ->leftJoin('tbl_game g', 't.id = g.quiz_id')
                 ->group('t.name')
                 ->order('averageRating DESC')
                 ->where("category = '" . $category . "'")

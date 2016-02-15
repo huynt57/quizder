@@ -2,48 +2,48 @@
 
 class QuizController extends Controller {
 
-    public function actionGetMostPlayedQuizziesRecently() {
+    public function actionGetMostPlayedQuizzesRecently() {
         $request = Yii::app()->request;
         try {
             $limit = StringHelper::filterString($request->getQuery('limit'));
             $recent_range = StringHelper::filterString($request->getQuery('recent_range'));
-            $data = Quiz::model()->getMostPlayedQuizziesRecently($recent_range, $limit);
+            $data = Quiz::model()->getMostPlayedQuizzesRecently($recent_range, $limit);
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
 
-    public function actionGetNewestQuizziesInCategory() {
+    public function actionGetNewestQuizzesInCategory() {
         $request = Yii::app()->request;
         try {
             $category = StringHelper::filterString($request->getQuery('category'));
 
-            $data = Quiz::model()->getNewestQuizziesInCategory($category);
+            $data = Quiz::model()->getNewestQuizzesInCategory($category);
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
 
-    public function actionGetMostPlayedQuizziesInCategory() {
+    public function actionGetMostPlayedQuizzesInCategory() {
         $request = Yii::app()->request;
         try {
             $category = StringHelper::filterString($request->getQuery('category'));
 
-            $data = Quiz::model()->getMostPlayedQuizziesInCategory($category);
+            $data = Quiz::model()->getMostPlayedQuizzesInCategory($category);
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
 
-    public function actionGetBestRatedQuizziesInCategory() {
+    public function actionGetBestRatedQuizzesInCategory() {
         $request = Yii::app()->request;
         try {
             $category = StringHelper::filterString($request->getQuery('category'));
 
-            $data = Quiz::model()->getBestRatedQuizziesInCategory($category);
+            $data = Quiz::model()->getBestRatedQuizzesInCategory($category);
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
