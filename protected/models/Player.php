@@ -79,7 +79,7 @@ class Player extends BasePlayer {
         $min_level = $min->level;
         $next_min = Level::model()->findByPk($min_level + 1);
         if ($points >= $max_point) {
-            return array('level' => $max_level, 'begin' => $max_point, 'next' => $max_point);
+            return array('level' => $max_level, 'begin' => $max_point, 'next' => null);
         } else if ($points == 0) {
             return array('level' => $min_level, 'begin' => $min_point, 'next' => $next_min->points_needed);
         }
