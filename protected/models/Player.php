@@ -63,6 +63,26 @@ class Player extends BasePlayer {
 
     public function getLevel($player) {
         $points = $player->total_points;
+        $criteria_max = new CDbCriteria;
+        $criteria_max->select = 't.*';
+        $criteria_max->order = 't.level DESC';
+        $criteria_max->limit = 1;
+        $max = Level::model()->find($criteria_max);
+        $max_point = $max->points_needed;
+        $max_level = $max->level;
+        $criteria_min = new CDbCriteria;
+        $criteria_min->select = 't.*';
+        $criteria_min->order = 't.level ASC';
+        $criteria_min->limit = 1;
+        $min = Level::model()->find($criteria_min);
+        $min_point = $min->points_needed;
+        $min_level = $min->level;
+        $next_min = Level::model()->findByPk($min_level + 1);
+        if ($points >= $max_point) {
+            return array('level' => $max_level, 'begin' => $max_point, 'next' => $max_point);
+        } else if ($points == 0) {
+            return array('level' => $min_level, 'begin' => $min_point, 'next' => $next_min->points_needed);
+        }
         $next = Yii::app()->db->createCommand()
                 ->select('t.*, MIN(t.level) AS begin')
                 ->from('tbl_level t')
