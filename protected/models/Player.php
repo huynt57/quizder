@@ -86,7 +86,7 @@ class Player extends BasePlayer {
         $next = Yii::app()->db->createCommand()
                 ->select('t.*, MIN(t.level) AS begin')
                 ->from('tbl_level t')
-                ->where("points_needed >= '" . $points . "'")
+                ->where("points_needed > '" . $points . "'")
                 ->queryRow();
         $begin_level = $next['begin'] - 1;
         $begin = Level::model()->findByPk($begin_level);

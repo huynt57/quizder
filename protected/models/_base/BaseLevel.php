@@ -10,7 +10,7 @@
  * and there are no model relations.
  *
  * @property integer $level
- * @property double $points_needed
+ * @property integer $points_needed
  *
  */
 abstract class BaseLevel extends GxActiveRecord {
@@ -34,8 +34,7 @@ abstract class BaseLevel extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('level', 'required'),
-			array('level', 'numerical', 'integerOnly'=>true),
-			array('points_needed', 'numerical'),
+			array('level, points_needed', 'numerical', 'integerOnly'=>true),
 			array('points_needed', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('level, points_needed', 'safe', 'on'=>'search'),
 		);
