@@ -56,6 +56,23 @@ class PlayerController extends Controller {
         }
     }
 
+    public function actionGetLeaderboardInCategory() {
+        $request = Yii::app()->request;
+        try {
+            $category = StringHelper::filterString($request->getQuery('category'));
+            $limit = StringHelper::filterString($request->getQuery('limit'));
+            $offset = StringHelper::filterString($request->getQuery('offset'));
+            if (!empty($category)) {
+                $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset);
+            } else {
+                $data = Player::model()->getLeaderboardAllCategory($limit, $offset);
+            }
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
     // Uncomment the following methods and override them if needed
     /*
       public function filters()

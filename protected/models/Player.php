@@ -93,4 +93,48 @@ class Player extends BasePlayer {
         return array('level' => $begin_level, 'begin' => $begin->points_needed, 'next' => $next['points_needed']);
     }
 
+    public function getLeaderboardInCategory($category, $limit, $offset) {
+        $quiz = Quiz::model()->findAllByAttributes(array('category' => $category));
+        $quiz_arr = array();
+        foreach ($quiz as $item) {
+            $quiz_arr[] = $item->id;
+        }
+        $criteria = new CDbCriteria;
+        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
+        $criteria->limit = $limit;
+        $criteria->offset = $offset;
+        $criteria->addInCondition('t.quiz_id', $quiz_arr);
+        $criteria->order = 'player_points DESC';
+        $criteria->group = 't.player_id';
+        $players = Game::model()->findAll($criteria);
+        $returnArr = array();
+        foreach ($players as $player) {
+            $itemArr = array();
+            $itemArr['player_info'] = Player::model()->findByPk($player->player_id);
+            $itemArr['player_points'] = $player->player_points;
+            $returnArr[] = $itemArr;
+            
+        }
+        return $returnArr;
+    }
+
+    public function getLeaderboardAllCategory($limit, $offset) {
+        $criteria = new CDbCriteria;
+        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
+        $criteria->limit = $limit;
+        $criteria->offset = $offset;
+        $criteria->order = 'player_points DESC';
+        $criteria->group = 't.player_id';
+        $players = Game::model()->findAll($criteria);
+        $returnArr = array();
+        foreach ($players as $player) {
+            $itemArr = array();
+            $itemArr['player_info'] = Player::model()->findByPk($player->player_id);
+            $itemArr['player_points'] = $player->player_points;
+            $returnArr[] = $itemArr;
+            
+        }
+        return $returnArr; 
+    }
+
 }

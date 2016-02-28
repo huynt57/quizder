@@ -14,8 +14,8 @@
  * @property string $description
  * @property string $category
  * @property integer $time
- * @property string $incorrect_image
- * @property string $correct_image
+ * @property string $incorrect_text
+ * @property string $correct_text
  * @property string $created_at
  * @property integer $is_time_bonus
  *
@@ -41,9 +41,9 @@ abstract class BaseQuiz extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('time, is_time_bonus', 'numerical', 'integerOnly'=>true),
-			array('name, description, category, incorrect_image, correct_image, created_at', 'safe'),
-			array('name, description, category, time, incorrect_image, correct_image, created_at, is_time_bonus', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('id, name, description, category, time, incorrect_image, correct_image, created_at, is_time_bonus', 'safe', 'on'=>'search'),
+			array('name, description, category, incorrect_text, correct_text, created_at', 'safe'),
+			array('name, description, category, time, incorrect_text, correct_text, created_at, is_time_bonus', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('id, name, description, category, time, incorrect_text, correct_text, created_at, is_time_bonus', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,8 +64,8 @@ abstract class BaseQuiz extends GxActiveRecord {
 			'description' => Yii::t('app', 'Description'),
 			'category' => Yii::t('app', 'Category'),
 			'time' => Yii::t('app', 'Time'),
-			'incorrect_image' => Yii::t('app', 'Incorrect Image'),
-			'correct_image' => Yii::t('app', 'Correct Image'),
+			'incorrect_text' => Yii::t('app', 'Incorrect Text'),
+			'correct_text' => Yii::t('app', 'Correct Text'),
 			'created_at' => Yii::t('app', 'Created At'),
 			'is_time_bonus' => Yii::t('app', 'Is Time Bonus'),
 		);
@@ -79,8 +79,8 @@ abstract class BaseQuiz extends GxActiveRecord {
 		$criteria->compare('description', $this->description, true);
 		$criteria->compare('category', $this->category, true);
 		$criteria->compare('time', $this->time);
-		$criteria->compare('incorrect_image', $this->incorrect_image, true);
-		$criteria->compare('correct_image', $this->correct_image, true);
+		$criteria->compare('incorrect_text', $this->incorrect_text, true);
+		$criteria->compare('correct_text', $this->correct_text, true);
 		$criteria->compare('created_at', $this->created_at, true);
 		$criteria->compare('is_time_bonus', $this->is_time_bonus);
 
