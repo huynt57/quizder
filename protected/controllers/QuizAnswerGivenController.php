@@ -4,7 +4,7 @@ class QuizAnswerGivenController extends Controller {
 
     public function actionAddGivenAnswers() {
         try {
-            $json = $_POST['given_answers'];
+            $json = $_POST['data'];
             $given_answers = json_decode($json, true);
             // var_dump($given_answers); die;
             $data = QuizAnswersGiven::model()->addGivenAnswers($given_answers);

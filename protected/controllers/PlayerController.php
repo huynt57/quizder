@@ -73,6 +73,24 @@ class PlayerController extends Controller {
         }
     }
 
+    public function actionAddPlayerPoints() {
+        $request = Yii::app()->request;
+        try {
+            $player_id = StringHelper::filterString($request->getPost('id'));
+            $points = StringHelper::filterString($request->getPost('points'));
+            $player = Player::model()->findByPk($player_id);
+            $old_point = $player->total_points;
+            $player->total_points = $old_point + $points;
+            if ($player->save(FALSE)) {
+                ResponseHelper::JsonReturnSuccess('');
+            } else {
+                ResponseHelper::JsonReturnError('Error');
+            }
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
     // Uncomment the following methods and override them if needed
     /*
       public function filters()
