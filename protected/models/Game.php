@@ -35,4 +35,13 @@ class Game extends BaseGame {
         return $data;
     }
 
+    public function getBestScoreOfQuizByPlayer($player_id, $quiz_id) {
+        $criteria = new CDbCriteria;
+        $criteria->limit = 1;
+        $criteria->condition = "t.player_id = $player_id AND t.quiz_id = $quiz_id";
+        $criteria->order = "t.player_points DESC";
+        $data = Game::model()->find($criteria);
+        return $data;
+    }
+
 }

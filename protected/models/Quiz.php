@@ -45,11 +45,11 @@ class Quiz extends BaseQuiz {
 
     public function getMostPlayedQuizzesInCategory($category) {
         $data = Yii::app()->db->createCommand()
-                ->select('t.*, count(g.id) AS gameCount')
+                ->select('t.*, count(g.id) AS play_count')
                 ->from('tbl_quiz t')
                 ->leftJoin('tbl_game g', 't.id = g.quiz_id')
                 ->group('t.id')
-                ->order('gameCount DESC')
+                ->order('play_count DESC')
                 ->where("category = '" . $category . "'")
                 ->queryAll();
         return $data;
@@ -57,11 +57,11 @@ class Quiz extends BaseQuiz {
 
     public function getBestRatedQuizzesInCategory($category) {
         $data = Yii::app()->db->createCommand()
-                ->select('t.*, avg(g.rating) AS averageRating')
+                ->select('t.*, avg(g.rating) AS average_rating')
                 ->from('tbl_quiz t')
                 ->leftJoin('tbl_game g', 't.id = g.quiz_id')
                 ->group('t.name')
-                ->order('averageRating DESC')
+                ->order('average_rating DESC')
                 ->where("category = '" . $category . "'")
                 ->queryAll();
         return $data;

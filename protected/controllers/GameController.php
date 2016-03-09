@@ -33,14 +33,25 @@ class GameController extends Controller {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
-    
-    public function actionGetTotalPlayerPoints()
-    {
+
+    public function actionGetTotalPlayerPoints() {
         $request = Yii::app()->request;
         try {
             $player_id = StringHelper::filterString($request->getQuery('player_id'));
             $data = Game::model()->getTotalPlayerPoints($player_id);
-           
+
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
+    public function actionGetBestGameQuizByPlayer() {
+        $request = Yii::app()->request;
+        try {
+            $player_id = StringHelper::filterString($request->getQuery('player_id'));
+            $quiz_id = StringHelper::filterString($request->getQuery('quiz_id'));
+            $data = Game::model()->getBestScoreOfQuizByPlayer($player_id, $quiz_id);
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
