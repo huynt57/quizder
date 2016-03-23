@@ -93,7 +93,7 @@ class Player extends BasePlayer {
         return array('level' => $begin_level, 'begin' => $begin->points_needed, 'next' => $next['points_needed']);
     }
 
-    public function getLeaderboardInCategory($category, $limit, $offset) {
+    public function getLeaderboardInCategory($category, $limit, $offset, $user_id) {
         $quiz = Quiz::model()->findAllByAttributes(array('category' => $category));
         $quiz_arr = array();
         foreach ($quiz as $item) {
@@ -113,12 +113,13 @@ class Player extends BasePlayer {
             $itemArr['player_info'] = Player::model()->findByPk($player->player_id);
             $itemArr['player_points'] = $player->player_points;
             $returnArr[] = $itemArr;
-            
         }
-        return $returnArr;
+        $current_postion = $this->getPositionOfUser($category, $user_id);
+
+        return array('items' => $returnArr, 'current_postition' => $current_postion);
     }
 
-    public function getLeaderboardAllCategory($limit, $offset) {
+    public function getLeaderboardAllCategory($limit, $offset, $user_id) {
         $criteria = new CDbCriteria;
         $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
         $criteria->limit = $limit;
@@ -132,9 +133,32 @@ class Player extends BasePlayer {
             $itemArr['player_info'] = Player::model()->findByPk($player->player_id);
             $itemArr['player_points'] = $player->player_points;
             $returnArr[] = $itemArr;
-            
         }
-        return $returnArr; 
+        $current_postion = $this->getPositionOfUser($user_id);
+
+        return array('items' => $returnArr, 'current_postition' => $current_postion);
+    }
+
+    public function getPositionOfUser($user_id, $category = NULL) {
+        $criteria = new CDbCriteria;
+        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
+        $criteria->order = 'player_points DESC';
+        $criteria->group = 't.player_id';
+        if (!empty($category)) {
+            $quiz = Quiz::model()->findAllByAttributes(array('category' => $category));
+            $quiz_arr = array();
+            foreach ($quiz as $item) {
+                $quiz_arr[] = $item->id;
+                $criteria->addInCondition('t.quiz_id', $quiz_arr);
+            }
+        }
+        $players = Game::model()->findAll($criteria);
+        $arr = array();
+        foreach ($players as $item) {
+            $arr[] = $item->player_id;
+        }
+        $postion = array_search($user_id, $arr);
+        return $postion + 1;
     }
 
 }

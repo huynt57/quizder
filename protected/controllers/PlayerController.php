@@ -62,10 +62,11 @@ class PlayerController extends Controller {
             $category = StringHelper::filterString($request->getQuery('category'));
             $limit = StringHelper::filterString($request->getQuery('limit'));
             $offset = StringHelper::filterString($request->getQuery('offset'));
+            $user_id = StringHelper::filterString($request->getQuery('user_id'));
             if (!empty($category)) {
-                $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset);
+                $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset, $user_id);
             } else {
-                $data = Player::model()->getLeaderboardAllCategory($limit, $offset);
+                $data = Player::model()->getLeaderboardAllCategory($limit, $offset, $user_id);
             }
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
