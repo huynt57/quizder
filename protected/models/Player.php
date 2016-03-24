@@ -114,9 +114,9 @@ class Player extends BasePlayer {
             $itemArr['player_points'] = $player->player_points;
             $returnArr[] = $itemArr;
         }
-        $current_postion = $this->getPositionOfUser($category, $user_id);
+        $current_postion = $this->getPositionAndPointOfUser($user_id, $category);
 
-        return array('items' => $returnArr, 'current_postition' => $current_postion);
+        return array('items' => $returnArr, 'current' => $current_postion);
     }
 
     public function getLeaderboardAllCategory($limit, $offset, $user_id) {
@@ -134,12 +134,12 @@ class Player extends BasePlayer {
             $itemArr['player_points'] = $player->player_points;
             $returnArr[] = $itemArr;
         }
-        $current_postion = $this->getPositionOfUser($user_id);
-
-        return array('items' => $returnArr, 'current_postition' => $current_postion);
+        $current_postion = $this->getPositionAndPointOfUser($user_id);
+        //  $current_points = Game::model()->getTotalPlayerPoints($user_id);
+        return array('items' => $returnArr, 'current' => $current_postion);
     }
 
-    public function getPositionOfUser($user_id, $category = NULL) {
+    public function getPositionAndPointOfUser($user_id, $category = NULL) {
         $criteria = new CDbCriteria;
         $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
         $criteria->order = 'player_points DESC';
@@ -149,16 +149,28 @@ class Player extends BasePlayer {
             $quiz_arr = array();
             foreach ($quiz as $item) {
                 $quiz_arr[] = $item->id;
-                $criteria->addInCondition('t.quiz_id', $quiz_arr);
             }
+            $criteria->addInCondition('t.quiz_id', $quiz_arr);
         }
         $players = Game::model()->findAll($criteria);
         $arr = array();
+//        $player_id_arr = array();
+//        $player_points_arr = array();
         foreach ($players as $item) {
-            $arr[] = $item->player_id;
+            $arr[$item->player_id] = $item->player_points;
+            // $player_points_arr
         }
-        $postion = array_search($user_id, $arr);
-        return $postion + 1;
+        $player_point = null;
+        $position = array_search($user_id, array_keys($arr));
+        if(!$position)
+        {
+            $position = null;
+        }
+        if (!empty($position)) {
+            $player_point = $arr[$user_id];
+        }
+        return array('current_position' => $position, 'current_points' => $player_point);
+        //return $position + 1;
     }
 
 }
