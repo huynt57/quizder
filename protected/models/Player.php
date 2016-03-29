@@ -166,19 +166,36 @@ ORDER BY player_points DESC LIMIT $offset, $limit";
     }
 
     public function getPositionAndPointOfUser($user_id, $category = NULL) {
-        $criteria = new CDbCriteria;
-        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
-        $criteria->order = 'player_points DESC';
-        $criteria->group = 't.player_id';
+        $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
+FROM (
+    SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
+    FROM `tbl_game` 
+    WHERE tbl_game.player_id > 0 
+    GROUP BY tbl_game.quiz_id, tbl_game.player_id
+) as derived 
+GROUP BY derived.player_id
+ORDER BY player_points DESC";
+//        $criteria = new CDbCriteria;
+//        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
+//        $criteria->order = 'player_points DESC';
+//        $criteria->group = 't.player_id';
         if (!empty($category)) {
-            $quiz = Quiz::model()->findAllByAttributes(array('category' => $category));
-            $quiz_arr = array();
-            foreach ($quiz as $item) {
-                $quiz_arr[] = $item->id;
-            }
-            $criteria->addInCondition('t.quiz_id', $quiz_arr);
+         $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
+FROM (
+    SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
+    FROM `tbl_game` 
+    WHERE tbl_game.quiz_id IN (
+        SELECT tbl_quiz.id 
+        FROM tbl_quiz 
+        WHERE tbl_quiz.category = '".$category."'
+    )
+    AND tbl_game.player_id > 0 
+    GROUP BY tbl_game.quiz_id, tbl_game.player_id
+) as derived 
+GROUP BY derived.player_id
+ORDER BY player_points DESC";
         }
-        $players = Game::model()->findAll($criteria);
+        $players = Game::model()->findAllBySql($sql);
         $arr = array();
 //        $player_id_arr = array();
 //        $player_points_arr = array();
