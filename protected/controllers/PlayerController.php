@@ -62,16 +62,36 @@ class PlayerController extends Controller {
             $category = StringHelper::filterString($request->getQuery('category'));
             $limit = StringHelper::filterString($request->getQuery('limit'));
             $offset = StringHelper::filterString($request->getQuery('offset'));
+            $user_id = StringHelper::filterString($request->getQuery('user_id'));
             if (!empty($category)) {
-                $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset);
+                $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset, $user_id);
             } else {
-                $data = Player::model()->getLeaderboardAllCategory($limit, $offset);
+                $data = Player::model()->getLeaderboardAllCategory($limit, $offset, $user_id);
             }
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
+
+    public function actionAddPlayerPoints() {
+        $request = Yii::app()->request;
+        try {
+            $player_id = StringHelper::filterString($request->getPost('id'));
+            $points = StringHelper::filterString($request->getPost('points'));
+            $player = Player::model()->findByPk($player_id);
+            $old_point = $player->total_points;
+            $player->total_points = $old_point + $points;
+            if ($player->save(FALSE)) {
+                ResponseHelper::JsonReturnSuccess('');
+            } else {
+                ResponseHelper::JsonReturnError('Error');
+            }
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+    
 
     // Uncomment the following methods and override them if needed
     /*
