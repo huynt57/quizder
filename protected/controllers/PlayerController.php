@@ -92,6 +92,10 @@ class PlayerController extends Controller {
         }
     }
     
+    public function actionGetTotalBestPlayerPoints()
+    {
+        
+    }
 
     // Uncomment the following methods and override them if needed
     /*

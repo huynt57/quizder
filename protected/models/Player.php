@@ -62,7 +62,8 @@ class Player extends BasePlayer {
     }
 
     public function getLevel($player) {
-        $points = $player->total_points;
+        $cpoints = $this->getPositionAndPointOfUser($player->id);
+        $points = $cpoints['current_points'];
         $criteria_max = new CDbCriteria;
         $criteria_max->select = 't.*';
         $criteria_max->order = 't.level DESC';
@@ -90,7 +91,8 @@ class Player extends BasePlayer {
                 ->queryRow();
         $begin_level = $next['begin'] - 1;
         $begin = Level::model()->findByPk($begin_level);
-        return array('level' => $begin_level, 'begin' => $begin->points_needed, 'next' => $next['points_needed']);
+
+        return array('level' => $begin_level, 'begin' => $begin->points_needed, 'next' => $next['points_needed'], 'points' => $points);
     }
 
     public function getLeaderboardInCategory($category, $limit, $offset, $user_id) {
@@ -114,7 +116,7 @@ FROM (
     WHERE tbl_game.quiz_id IN (
         SELECT tbl_quiz.id 
         FROM tbl_quiz 
-        WHERE tbl_quiz.category = '".$category."'
+        WHERE tbl_quiz.category = '" . $category . "'
     )
     AND tbl_game.player_id > 0 
     GROUP BY tbl_game.quiz_id, tbl_game.player_id
@@ -180,14 +182,14 @@ ORDER BY player_points DESC";
 //        $criteria->order = 'player_points DESC';
 //        $criteria->group = 't.player_id';
         if (!empty($category)) {
-         $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
+            $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
     SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
     FROM `tbl_game` 
     WHERE tbl_game.quiz_id IN (
         SELECT tbl_quiz.id 
         FROM tbl_quiz 
-        WHERE tbl_quiz.category = '".$category."'
+        WHERE tbl_quiz.category = '" . $category . "'
     )
     AND tbl_game.player_id > 0 
     GROUP BY tbl_game.quiz_id, tbl_game.player_id
