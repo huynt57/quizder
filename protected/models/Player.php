@@ -10,28 +10,34 @@ class Player extends BasePlayer {
 
     public function createReturnValue($data) {
         $attrs = $this->attributeLabels();
-        $returnValue = array();
-        foreach ($attrs as $key => $value) {
-            $returnValue[$key] = $data->$key;
-            $returnValue['level_info'] = $this->getLevel($data);
+        if ($data) {
+            $returnValue = array();
+            foreach ($attrs as $key => $value) {
+                $returnValue[$key] = $data->$key;
+                $returnValue['level_info'] = $this->getLevel($data);
+            }
+            return $returnValue;
         }
-        return $returnValue;
+        return NULL;
     }
 
     public function getPlayerByFacebook($facebook_id) {
         $data = Player::model()->findByAttributes(array('facebook_id' => $facebook_id));
+
         $returnValue = $this->createReturnValue($data);
         return $returnValue;
     }
 
     public function getPlayerByGoogle($google_id) {
         $data = Player::model()->findByAttributes(array('google_id' => $google_id));
+
         $returnValue = $this->createReturnValue($data);
         return $returnValue;
     }
 
     public function getPlayerByTwitter($twitter_id) {
         $data = Player::model()->findByAttributes(array('twitter_id' => $twitter_id));
+
         $returnValue = $this->createReturnValue($data);
         return $returnValue;
     }
