@@ -146,4 +146,33 @@ class Util {
         return Yii::app()->request->getBaseUrl(true) . '/' . $url;
     }
 
+    public static function getFriendsFacebook($access_token) {
+        $facebook_url = 'https://graph.facebook.com/v2.6/me/friends?fields=id';
+        $result = file_get_contents($facebook_url . '&access_token=' . $access_token);
+        $friend_arrs = json_decode($result, true);
+        $arr = array();
+        foreach ($friend_arrs['data'] as $item) {
+            $arr[] = $item['id'];
+        }
+       // var_dump($arr);
+        //die;
+        $str = NULL;
+        $criteria = new CDbCriteria;
+        $criteria->select = 'id';
+        $criteria->addInCondition('facebook_id', $arr);
+        $friends = Player::model()->findAll($criteria);
+        if ($friends) {
+            $str = '(';
+            foreach ($friends as $item) {
+                $str .= $item->id . ',';
+            }
+            
+          //  $str .= ')';
+            substr($str, 0, -1);
+            $str .= ')';
+            
+        }
+        return $str;
+    }
+
 }

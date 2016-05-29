@@ -91,10 +91,34 @@ class PlayerController extends Controller {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
-    
-    public function actionGetTotalBestPlayerPoints()
-    {
+
+    public function actionGetTotalBestPlayerPoints() {
         
+    }
+
+    public function actionGetFriends() {
+        $request = Yii::app()->request;
+        try {
+            $access_token = StringHelper::filterString($request->getPost('access_token'));
+            $category = StringHelper::filterString($request->getPost('category'));
+            $limit = StringHelper::filterString($request->getPost('limit'));
+            $offset = StringHelper::filterString($request->getPost('offset'));
+            $user_id = StringHelper::filterString($request->getPost('user_id'));
+            $friends = Util::getFriendsFacebook($access_token);
+            //echo $friends; die;
+            //echo '123';
+            $friends = substr($friends, 0, -2);
+            $friends .= ')';
+             if (!empty($category)) {
+                $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset, $user_id, $friends);
+            } else {
+                $data = Player::model()->getLeaderboardAllCategory($limit, $offset, $user_id, $friends);
+            }      
+            ResponseHelper::JsonReturnSuccess($data);
+            //echo '123';
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
     }
 
     // Uncomment the following methods and override them if needed
