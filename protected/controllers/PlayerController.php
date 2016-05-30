@@ -108,12 +108,13 @@ class PlayerController extends Controller {
             //echo $friends; die;
             //echo '123';
             $friends = substr($friends, 0, -2);
+            $friends.=',' . $user_id;
             $friends .= ')';
-             if (!empty($category)) {
+            if (!empty($category)) {
                 $data = Player::model()->getLeaderboardInCategory($category, $limit, $offset, $user_id, $friends);
             } else {
                 $data = Player::model()->getLeaderboardAllCategory($limit, $offset, $user_id, $friends);
-            }      
+            }
             ResponseHelper::JsonReturnSuccess($data);
             //echo '123';
         } catch (Exception $ex) {

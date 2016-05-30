@@ -1,5 +1,7 @@
 <?php
 
+require_once './vendor/autoload.php';
+
 class Util {
 
     public static function getVoiceUploadPath() {
@@ -154,7 +156,7 @@ class Util {
         foreach ($friend_arrs['data'] as $item) {
             $arr[] = $item['id'];
         }
-       // var_dump($arr);
+        // var_dump($arr);
         //die;
         $str = NULL;
         $criteria = new CDbCriteria;
@@ -166,13 +168,30 @@ class Util {
             foreach ($friends as $item) {
                 $str .= $item->id . ',';
             }
-            
-          //  $str .= ')';
+
+            //  $str .= ')';
             substr($str, 0, -1);
             $str .= ')';
-            
         }
         return $str;
+    }
+
+    public function GG() {
+        $email = '<email account which could access that api>';
+        $scope = 'https://www.googleapis.com/auth/cloud-platform';
+        $apiKey = '<my api key>';
+        $oAuthId = 'db85477d21009dcb006c61ae95edbda2a4351d21';
+        $serviceAcc = '<service account id>@developer.gserviceaccount.com';
+        $keyFileLocation = $_SERVER['DOCUMENT_ROOT'] . "/<p12 file>";
+        $bucketId = '<my bucket id>';
+        $list = array();
+
+        $client = new Google_Client();
+        $client->setApplicationName("gp-api");
+        $client->setDeveloperKey($apiKey);
+        $cred = new Google_Auth_AssertionCredentials(
+                $serviceAcc, array($scope), file_get_contents($keyFileLocation), 'notasecret', 'http://oauth.net/grant_type/jwt/1.0/bearer', $email
+        );
     }
 
 }
