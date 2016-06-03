@@ -99,12 +99,13 @@ class PlayerController extends Controller {
     public function actionGetFriends() {
         $request = Yii::app()->request;
         try {
-            $access_token = StringHelper::filterString($request->getPost('access_token'));
-            $category = StringHelper::filterString($request->getPost('category'));
-            $limit = StringHelper::filterString($request->getPost('limit'));
-            $offset = StringHelper::filterString($request->getPost('offset'));
-            $user_id = StringHelper::filterString($request->getPost('user_id'));
+            $access_token = StringHelper::filterString($request->getQuery('access_token'));
+            $category = StringHelper::filterString($request->getQuery('category'));
+            $limit = StringHelper::filterString($request->getQuery('limit'));
+            $offset = StringHelper::filterString($request->getQuery('offset'));
+            $user_id = StringHelper::filterString($request->getQuery('user_id'));
             $friends = Util::getFriendsFacebook($access_token);
+            
             //echo $friends; die;
             //echo '123';
             $friends = substr($friends, 0, -2);

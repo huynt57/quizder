@@ -154,7 +154,7 @@ ORDER BY player_points DESC LIMIT $offset, $limit";
             $itemArr['player_points'] = $player->player_points;
             $returnArr[] = $itemArr;
         }
-        $current_postion = $this->getPositionAndPointOfUser($user_id, $category);
+        $current_postion = $this->getPositionAndPointOfUser($user_id, $category, $friends);
 
         return array('items' => $returnArr, 'current' => $current_postion);
     }
@@ -198,7 +198,7 @@ ORDER BY player_points DESC LIMIT $offset, $limit";
             $itemArr['player_points'] = $player->player_points;
             $returnArr[] = $itemArr;
         }
-        $current_postion = $this->getPositionAndPointOfUser($user_id);
+        $current_postion = $this->getPositionAndPointOfUser($user_id, NULL, $friends);
         //  $current_points = Game::model()->getTotalPlayerPoints($user_id);
         return array('items' => $returnArr, 'current' => $current_postion);
     }
@@ -228,6 +228,24 @@ FROM (
         WHERE tbl_quiz.category = '" . $category . "'
     )
     AND tbl_game.player_id > 0 
+    GROUP BY tbl_game.quiz_id, tbl_game.player_id
+) as derived 
+GROUP BY derived.player_id
+ORDER BY player_points DESC";
+        }
+        
+        if(!empty($category) && !empty($friends))
+        {
+            $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
+FROM (
+    SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
+    FROM `tbl_game` 
+    WHERE tbl_game.quiz_id IN (
+        SELECT tbl_quiz.id 
+        FROM tbl_quiz 
+        WHERE tbl_quiz.category = '" . $category . "'
+    )
+    AND tbl_game.player_id IN $friends 
     GROUP BY tbl_game.quiz_id, tbl_game.player_id
 ) as derived 
 GROUP BY derived.player_id

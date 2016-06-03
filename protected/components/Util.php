@@ -162,6 +162,7 @@ class Util {
         $criteria = new CDbCriteria;
         $criteria->select = 'id';
         $criteria->addInCondition('facebook_id', $arr);
+        
         $friends = Player::model()->findAll($criteria);
         if ($friends) {
             $str = '(';
