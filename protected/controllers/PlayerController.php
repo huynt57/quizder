@@ -2,6 +2,11 @@
 
 class PlayerController extends Controller {
 
+    protected function beforeAction($event) {
+        
+        return true;
+    }
+
     public function actionGetPlayer() {
         $request = Yii::app()->request;
         try {
@@ -105,7 +110,7 @@ class PlayerController extends Controller {
             $offset = StringHelper::filterString($request->getQuery('offset'));
             $user_id = StringHelper::filterString($request->getQuery('user_id'));
             $friends = Util::getFriendsFacebook($access_token);
-            
+
             //echo $friends; die;
             //echo '123';
             $friends = substr($friends, 0, -2);
