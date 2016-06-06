@@ -217,6 +217,18 @@ ORDER BY player_points DESC";
 //        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
 //        $criteria->order = 'player_points DESC';
 //        $criteria->group = 't.player_id';
+        if(!empty($friends) && empty($category))
+        {
+            $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
+FROM (
+    SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
+    FROM `tbl_game` 
+    WHERE tbl_game.player_id IN $friends 
+    GROUP BY tbl_game.quiz_id, tbl_game.player_id
+) as derived 
+GROUP BY derived.player_id
+ORDER BY player_points DESC";
+        }
         if (!empty($category)) {
             $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
