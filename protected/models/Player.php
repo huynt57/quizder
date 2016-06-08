@@ -315,7 +315,13 @@ ORDER BY player_points DESC";
             $player_point = $arr[$user_id];
         }
         //  var_dump($player_point); die;
-        return array('current_position' => $position, 'current_points' => $player_point);
+        foreach ($players as $player) {
+            $itemArr = array();
+            $itemArr['player_info'] = Player::model()->findByPk($player->player_id);
+            $itemArr['player_points'] = $player->player_points;
+            $returnArr[] = $itemArr;
+        }
+        return array('items'=>$returnArr, 'current_position' => $position, 'current_points' => $player_point);
     }
 
 }
