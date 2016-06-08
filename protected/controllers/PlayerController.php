@@ -3,7 +3,7 @@
 class PlayerController extends Controller {
 
     protected function beforeAction($event) {
-        
+
         return true;
     }
 
@@ -110,9 +110,6 @@ class PlayerController extends Controller {
             $offset = StringHelper::filterString($request->getQuery('offset'));
             $user_id = StringHelper::filterString($request->getQuery('user_id'));
             $friends = Util::getFriendsFacebook($access_token);
-
-            //echo $friends; die;
-            //echo '123';
             $friends = substr($friends, 0, -2);
             $friends.=',' . $user_id;
             $friends .= ')';
@@ -125,6 +122,24 @@ class PlayerController extends Controller {
             //echo '123';
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
+    public function actionGetFriendsQuiz() {
+        $request = Yii::app()->request;
+        try {
+            $access_token = StringHelper::filterString($request->getQuery('access_token'));
+            $quiz = StringHelper::filterString($request->getQuery('quiz_id'));
+            $user_id = StringHelper::filterString($request->getQuery('user_id'));
+            
+            $friends = Util::getFriendsFacebook($access_token);
+            $friends = substr($friends, 0, -2);
+            $friends.=',' . $user_id;
+            $friends .= ')';
+            $data = Player::model()->getLeaderBoardFriends($user_id, $friends, $quiz);
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            
         }
     }
 

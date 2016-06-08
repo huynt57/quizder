@@ -101,7 +101,7 @@ class Player extends BasePlayer {
         return array('level' => $begin_level, 'begin' => $begin->points_needed, 'next' => $next['points_needed'], 'points' => $points);
     }
 
-    public function getLeaderboardInCategory($category, $limit, $offset, $user_id, $friends=NULL) {
+    public function getLeaderboardInCategory($category, $limit, $offset, $user_id, $friends = NULL) {
 //        $quiz = Quiz::model()->findAllByAttributes(array('category' => $category));
 //        $quiz_arr = array();
 //        foreach ($quiz as $item) {
@@ -129,8 +129,7 @@ FROM (
 ) as derived 
 GROUP BY derived.player_id
 ORDER BY player_points DESC LIMIT $offset, $limit";
-        if(!empty($friends))
-        {
+        if (!empty($friends)) {
             $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
     SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
@@ -159,7 +158,7 @@ ORDER BY player_points DESC LIMIT $offset, $limit";
         return array('items' => $returnArr, 'current' => $current_postion);
     }
 
-    public function getLeaderboardAllCategory($limit, $offset, $user_id, $friends=NULL) {
+    public function getLeaderboardAllCategory($limit, $offset, $user_id, $friends = NULL) {
         //$criteria = new CDbCriteria;
 //        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
 //        $criteria->limit = $limit;
@@ -176,9 +175,8 @@ FROM (
 ) as derived 
 GROUP BY derived.player_id
 ORDER BY player_points DESC LIMIT $offset, $limit";
-        
-        if(!empty($friends))
-        {
+
+        if (!empty($friends)) {
             $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
     SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
@@ -203,7 +201,7 @@ ORDER BY player_points DESC LIMIT $offset, $limit";
         return array('items' => $returnArr, 'current' => $current_postion);
     }
 
-    public function getPositionAndPointOfUser($user_id, $category = NULL, $friends=NULL) {
+    public function getPositionAndPointOfUser($user_id, $category = NULL, $friends = NULL) {
         $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
     SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
@@ -217,8 +215,7 @@ ORDER BY player_points DESC";
 //        $criteria->select = 't.player_id, SUM(t.player_points) AS player_points';
 //        $criteria->order = 'player_points DESC';
 //        $criteria->group = 't.player_id';
-        if(!empty($friends) && empty($category))
-        {
+        if (!empty($friends) && empty($category)) {
             $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
     SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
@@ -245,9 +242,8 @@ FROM (
 GROUP BY derived.player_id
 ORDER BY player_points DESC";
         }
-        
-        if(!empty($category) && !empty($friends))
-        {
+
+        if (!empty($category) && !empty($friends)) {
             $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
 FROM (
     SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
@@ -263,10 +259,10 @@ FROM (
 GROUP BY derived.player_id
 ORDER BY player_points DESC";
         }
-        
-       // echo $sql; die;
-        
-        
+
+        // echo $sql; die;
+
+
         $players = Game::model()->findAllBySql($sql);
         $arr = array();
 //        $player_id_arr = array();
@@ -284,11 +280,42 @@ ORDER BY player_points DESC";
         if (isset($position)) {
             $player_point = $arr[$user_id];
         }
-      //  var_dump($player_point); die;
+        //  var_dump($player_point); die;
         return array('current_position' => $position, 'current_points' => $player_point);
         //return $position + 1;
     }
-    
-   
+
+    public function getLeaderBoardFriends($user_id, $friends, $quiz) {
+        $sql = "SELECT derived.player_id, sum(derived.best_score) AS player_points 
+FROM (
+    SELECT tbl_game.quiz_id, tbl_game.player_id, max(tbl_game.player_points) AS best_score 
+    FROM `tbl_game` 
+    WHERE tbl_game.player_id IN $friends 
+    AND tbl_game.quiz_id = $quiz
+    GROUP BY tbl_game.player_id
+) as derived 
+GROUP BY derived.player_id
+ORDER BY player_points DESC";
+
+        $players = Game::model()->findAllBySql($sql);
+        $arr = array();
+//        $player_id_arr = array();
+//        $player_points_arr = array();
+        foreach ($players as $item) {
+            $arr[$item->player_id] = $item->player_points;
+            // $player_points_arr
+        }
+        $player_point = null;
+        $position = array_search($user_id, array_keys($arr));
+        if ($position === FALSE) {
+            $position = null;
+        }
+        //echo $position; die;
+        if (isset($position)) {
+            $player_point = $arr[$user_id];
+        }
+        //  var_dump($player_point); die;
+        return array('current_position' => $position, 'current_points' => $player_point);
+    }
 
 }
