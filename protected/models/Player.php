@@ -51,6 +51,7 @@ class Player extends BasePlayer {
     public function addPlayer($args) {
         $model = new Player;
         $model->setAttributes($args);
+        $model->token = StringHelper::generateToken(20, 30);
         $model->created_at = new CDbExpression('NOW()');
         if ($model->save(FALSE)) {
             return $model->id;
@@ -314,6 +315,7 @@ ORDER BY player_points DESC";
         if (isset($position)) {
             $player_point = $arr[$user_id];
         }
+        $returnArr = array();
         //  var_dump($player_point); die;
         foreach ($players as $player) {
             $itemArr = array();

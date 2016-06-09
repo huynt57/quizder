@@ -25,6 +25,7 @@
  * @property integer $total_points
  * @property string $facebook_token
  * @property string $google_token
+ * @property string $token
  *
  */
 abstract class BasePlayer extends GxActiveRecord {
@@ -48,9 +49,9 @@ abstract class BasePlayer extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('membership_id, total_points', 'numerical', 'integerOnly'=>true),
-			array('name, nick_name, profile_picture, email_address, facebook_id, google_id, twitter_id, gender, date_of_birth, country, created_at, facebook_token, google_token', 'safe'),
-			array('name, nick_name, profile_picture, email_address, facebook_id, google_id, twitter_id, gender, date_of_birth, country, membership_id, created_at, total_points, facebook_token, google_token', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('id, name, nick_name, profile_picture, email_address, facebook_id, google_id, twitter_id, gender, date_of_birth, country, membership_id, created_at, total_points, facebook_token, google_token', 'safe', 'on'=>'search'),
+			array('name, nick_name, profile_picture, email_address, facebook_id, google_id, twitter_id, gender, date_of_birth, country, created_at, facebook_token, google_token, token', 'safe'),
+			array('name, nick_name, profile_picture, email_address, facebook_id, google_id, twitter_id, gender, date_of_birth, country, membership_id, created_at, total_points, facebook_token, google_token, token', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('id, name, nick_name, profile_picture, email_address, facebook_id, google_id, twitter_id, gender, date_of_birth, country, membership_id, created_at, total_points, facebook_token, google_token, token', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -82,6 +83,7 @@ abstract class BasePlayer extends GxActiveRecord {
 			'total_points' => Yii::t('app', 'Total Points'),
 			'facebook_token' => Yii::t('app', 'Facebook Token'),
 			'google_token' => Yii::t('app', 'Google Token'),
+			'token' => Yii::t('app', 'Token'),
 		);
 	}
 
@@ -104,6 +106,7 @@ abstract class BasePlayer extends GxActiveRecord {
 		$criteria->compare('total_points', $this->total_points);
 		$criteria->compare('facebook_token', $this->facebook_token, true);
 		$criteria->compare('google_token', $this->google_token, true);
+		$criteria->compare('token', $this->token, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
