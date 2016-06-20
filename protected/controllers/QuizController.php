@@ -100,7 +100,7 @@ class QuizController extends Controller {
     public function actionGetRatingQuizByQuiz() {
         $request = Yii::app()->request;
         try {
-            $quiz_id = StringHelper::filterString($request->getPost('quiz_id'));
+            $quiz_id = StringHelper::filterString($request->getQuery('quiz_id'));
             $data = QuizRating::model()->findAllByAttributes(array('quiz_id' => $quiz_id));
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
@@ -111,7 +111,7 @@ class QuizController extends Controller {
     public function actionGetRatingQuizByPlayer() {
         $request = Yii::app()->request;
         try {
-            $player_id = StringHelper::filterString($request->getPost('player_id'));
+            $player_id = StringHelper::filterString($request->getQuery('player_id'));
             $data = QuizRating::model()->findAllByAttributes(array('player_id' => $player_id));
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
