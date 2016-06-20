@@ -118,6 +118,19 @@ class QuizController extends Controller {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
     }
+    
+    public function actionGetRatingQuizOfPlayer()
+    {
+        $request = Yii::app()->request;
+        try {
+            $quiz_id = StringHelper::filterString($request->getPost('quiz_id'));
+            $player_id = StringHelper::filterString($request->getPost('player_id'));
+            $data = QuizRating::model()->findAllByAttributes(array('player_id' => $player_id, 'quiz_id'=>$quiz_id));
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
 
     // Uncomment the following methods and override them if needed
     /*
