@@ -139,7 +139,7 @@ class PlayerController extends Controller {
             $data = Player::model()->getLeaderBoardFriends($user_id, $friends, $quiz);
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
-            
+            ResponseHelper::JsonReturnError('');
         }
     }
 
