@@ -50,6 +50,75 @@ class QuizController extends Controller {
         }
     }
 
+    public function actionAddRatingQuiz() {
+        $request = Yii::app()->request;
+        try {
+            $rating = StringHelper::filterString($request->getPost('rating'));
+            $comment = StringHelper::filterString($request->getPost('comment'));
+            $quiz_id = StringHelper::filterString($request->getPost('quiz_id'));
+            $player_id = StringHelper::filterString($request->getPost('player_id'));
+            if (Quiz::model()->addRatingQuiz($rating, $comment, $quiz_id, $player_id)) {
+                ResponseHelper::JsonReturnSuccess('');
+            } else {
+                ResponseHelper::JsonReturnSuccess('');
+            }
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
+    public function actionEditRatingQuiz() {
+        $request = Yii::app()->request;
+        try {
+            $id = StringHelper::filterString($request->getPost('id'));
+            $comment = StringHelper::filterString($request->getPost('comment'));
+            $rating = StringHelper::filterString($request->getPost('rating'));
+            if (Quiz::model()->editRatingQuiz($id, $comment, $rating)) {
+                ResponseHelper::JsonReturnSuccess('');
+            } else {
+                ResponseHelper::JsonReturnSuccess('');
+            }
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
+    public function actionDeleteRatingQuiz() {
+        $request = Yii::app()->request;
+        try {
+            $id = StringHelper::filterString($request->getPost('id'));
+            if (Quiz::model()->delelteRatingQuiz($id)) {
+                ResponseHelper::JsonReturnSuccess('');
+            } else {
+                ResponseHelper::JsonReturnSuccess('');
+            }
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
+    public function actionGetRatingQuizByQuiz() {
+        $request = Yii::app()->request;
+        try {
+            $quiz_id = StringHelper::filterString($request->getPost('quiz_id'));
+            $data = QuizRating::model()->findAllByAttributes(array('quiz_id' => $quiz_id));
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
+    public function actionGetRatingQuizByPlayer() {
+        $request = Yii::app()->request;
+        try {
+            $player_id = StringHelper::filterString($request->getPost('player_id'));
+            $data = QuizRating::model()->findAllByAttributes(array('player_id' => $player_id));
+            ResponseHelper::JsonReturnSuccess($data);
+        } catch (Exception $ex) {
+            ResponseHelper::JsonReturnError($ex->getMessage());
+        }
+    }
+
     // Uncomment the following methods and override them if needed
     /*
       public function filters()

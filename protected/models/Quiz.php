@@ -67,4 +67,35 @@ class Quiz extends BaseQuiz {
         return $data;
     }
 
+    public function addRatingQuiz($rating, $comment, $quiz_id, $player_id) {
+        $model = new QuizRating();
+        $model->rating = $rating;
+        $model->quiz_id = $quiz_id;
+        $model->created_at = time();
+        $model->updated_at = time();
+        $model->player_id = $player_id;
+        $model->comment = $comment;
+        if ($model->save(FALSE)) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    public function deleteRatingQuiz($id) {
+        if (QuizRating::model()->deleteByPk($id)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function editRatingQuiz($id, $comment, $rating) {
+        $item = QuizRating::model()->findByPk($id);
+        $item->comment = $comment;
+        $item->rating = $rating;
+        if ($item->save(FALSE)) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
 }
