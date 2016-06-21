@@ -57,9 +57,9 @@ class Quiz extends BaseQuiz {
 
     public function getBestRatedQuizzesInCategory($category) {
         $data = Yii::app()->db->createCommand()
-                ->select('t.*, avg(g.rating) AS average_rating')
+                ->select('t.*, avg(r.rating) AS average_rating')
                 ->from('tbl_quiz t')
-                ->leftJoin('tbl_game g', 't.id = g.quiz_id')
+                ->leftJoin('tbl_quiz_rating r', 't.id = r.quiz_id')
                 ->group('t.name')
                 ->order('average_rating DESC')
                 ->where("category = '" . $category . "'")

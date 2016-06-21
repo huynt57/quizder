@@ -123,8 +123,8 @@ class QuizController extends Controller {
     {
         $request = Yii::app()->request;
         try {
-            $quiz_id = StringHelper::filterString($request->getPost('quiz_id'));
-            $player_id = StringHelper::filterString($request->getPost('player_id'));
+            $quiz_id = StringHelper::filterString($request->getQuery('quiz_id'));
+            $player_id = StringHelper::filterString($request->getQuery('player_id'));
             $data = QuizRating::model()->findAllByAttributes(array('player_id' => $player_id, 'quiz_id'=>$quiz_id));
             ResponseHelper::JsonReturnSuccess($data);
         } catch (Exception $ex) {
