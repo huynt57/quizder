@@ -76,12 +76,12 @@ class Quiz extends BaseQuiz {
         $model->player_id = $player_id;
         $model->comment = $comment;
         if ($model->save(FALSE)) {
-            return TRUE;
+            return $model->id;
         }
         return FALSE;
     }
 
-    public function deleteRatingQuiz($id) {
+    public function delelteRatingQuiz($id) {
         if (QuizRating::model()->deleteByPk($id)) {
             return true;
         }

@@ -57,11 +57,8 @@ class QuizController extends Controller {
             $comment = StringHelper::filterString($request->getPost('comment'));
             $quiz_id = StringHelper::filterString($request->getPost('quiz_id'));
             $player_id = StringHelper::filterString($request->getPost('player_id'));
-            if (Quiz::model()->addRatingQuiz($rating, $comment, $quiz_id, $player_id)) {
-                ResponseHelper::JsonReturnSuccess('');
-            } else {
-                ResponseHelper::JsonReturnSuccess('');
-            }
+            $result = Quiz::model()->addRatingQuiz($rating, $comment, $quiz_id, $player_id);          
+            ResponseHelper::JsonReturnSuccess($result);
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
         }
@@ -76,7 +73,7 @@ class QuizController extends Controller {
             if (Quiz::model()->editRatingQuiz($id, $comment, $rating)) {
                 ResponseHelper::JsonReturnSuccess('');
             } else {
-                ResponseHelper::JsonReturnSuccess('');
+                ResponseHelper::JsonReturnError('');
             }
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
@@ -90,7 +87,7 @@ class QuizController extends Controller {
             if (Quiz::model()->delelteRatingQuiz($id)) {
                 ResponseHelper::JsonReturnSuccess('');
             } else {
-                ResponseHelper::JsonReturnSuccess('');
+                ResponseHelper::JsonReturnError('');
             }
         } catch (Exception $ex) {
             ResponseHelper::JsonReturnError($ex->getMessage());
